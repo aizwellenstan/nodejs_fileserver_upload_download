@@ -55,12 +55,20 @@ function sendListOfUploadedFiles(res){
 
 function sendUploadedFile(url, res){
   let file = path.join(__dirname, url);
+	let fileExt = url.split('.').pop();
   fs.readFile(file, (err, content) => {
     if(err){
       res.writeHead(404, {'Content-Type': 'text'});
       res.write('File Not Found!');
       res.end();
-    }else{
+    }
+	else if(fileExt=='json')
+	{
+      		res.writeHead(200, {'Content-Type': 'application/json'});
+      		res.write(content.toString('utf8'));
+      		res.end();
+	}
+	  else{
       res.writeHead(200, {'Content-Type': 'application/octet-stream'});
       res.write(content);
       res.end();
